@@ -39,10 +39,11 @@ def create_folder(name, domain=None, username=None, password=None,
 for i in range(1000):
     resp = create_folder(name='test%s' % i)
     print('\n'
+          'Folder %s created!\n'
           'Data:'
           '\n'
           '%s'
           '\n'
           'Status_code:'
           '\n'
-          '%s' % (resp.content, resp.status_code))
+          '%s' % (resp.content, resp.status_code, i))
