@@ -2,8 +2,8 @@ import requests
 import json
 
 
-def create_folder(path, domain=None, username=None, password=None,
-                  content_type=None, accept=None, method=None):
+def create_folder(name, domain=None, username=None, password=None,
+                  content_type=None, accept=None, method=None, test_path=None):
     if domain is None:
         domain = 'https://istepanko.qa-egnyte.com'
     if content_type is None:
@@ -16,9 +16,11 @@ def create_folder(path, domain=None, username=None, password=None,
         method = 'POST'
     if accept is None:
         accept = 'application/json'
+    if test_path is None:
+        test_path = '/Shared/smoke_test/'
 
     endpoint = '/public-api/v1/fs'
-    url = domain + endpoint + path
+    url = domain + endpoint + test_path + name
     headers = dict()
     headers['Content-Type'] = content_type
     headers['Accept'] = accept
@@ -34,10 +36,7 @@ def create_folder(path, domain=None, username=None, password=None,
     )
     return r
 
-resp = create_folder()
-data = resp.content
-status_code = resp.status_code
-headers = resp.headers
+resp = create_folder(name='test')
 print('\n'
       'Data:'
       '\n'
