@@ -36,16 +36,13 @@ def create_folder(name, domain=None, username=None, password=None,
     )
     return r
 
-resp = create_folder(name='test')
-print('\n'
-      'Data:'
-      '\n'
-      '%s'
-      '\n'
-      'Status_code:'
-      '\n'
-      '%s'
-      '\n'
-      'Headers:'
-      '\n'
-      '%s' % (resp.content, resp.status_code, resp.headers))
+for i in range(1000):
+    resp = create_folder(name='test%s' % i)
+    print('\n'
+          'Data:'
+          '\n'
+          '%s'
+          '\n'
+          'Status_code:'
+          '\n'
+          '%s' % (resp.content, resp.status_code))
