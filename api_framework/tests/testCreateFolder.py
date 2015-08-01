@@ -19,5 +19,5 @@ class TestClass(TestCase):
         resp = self.calls.create_folder(folder, password='asdas')
         assert resp.http_code == httplib.UNAUTHORIZED
         assert resp.json['inputErrors']['credentials'][0]['code'] == 'INVALID_CREDENTIALS'
-        assert resp.json['inputErrors']['credentials'][0]['msg'] == 'his request is unauthenticated. Please provide ' \
+        assert resp.json['inputErrors']['credentials'][0]['msg'] == 'This request is unauthenticated. Please provide ' \
                                                                     'credentials and try again.'
