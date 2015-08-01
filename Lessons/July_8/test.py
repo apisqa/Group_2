@@ -1,13 +1,5 @@
-"""
-l = ['1', '2', '3']
+import time
 
-print(' '.join(l))
-
-k = 'qwe,eqfewf,rngker, hjfddsfd, fdsfd,fdsf'
-l = k.split()
-print l
-"""
-
-g = '012345678'
-l = g[:3] + g[4:]
-print(l)
+for i in range(100):
+    print(str(time.time()))
+    time.sleep(0.2)
