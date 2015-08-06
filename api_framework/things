@@ -1,0 +1,87 @@
+
+To run individual test case:
+nosetests-2.7 tests/testCreateFolder.py:TestClass.test_delete_folder_wrong_accept_header --nocapture
+
+curl 'http://codingbat.com/python/Warmup-1' > test.html
+
+curl 'http://codingbat.com/python/Warmup-1'
+
+http://jsonviewer.stack.hu/
+
+curl GET by default if no data provided
+curl POST by default if any data provided
+
+url https://<domain>.qa-egnyte.com/public-api/v1/fs/Shared -u<username>:<password> -X GET
+
+{"name":"Shared","folders":[{"name":"dynamic_name_143724230288","path":"/Shared/dynamic_name_143724230288","folder_id":"2e268613-6523-4b14-a0d5-0f2c5cf2092b","is_folder":true},{"name":"Documents","path":"/Shared/Documents","folder_id":"c947b56d-5c08-40e1-81d3-633198a3f0c9","is_folder":true}],"path":"/Shared","folder_id":"d38c2abc-ee75-4a15-a2c2-4fa3be22aabd","is_folder":true,"restrict_move_delete":true,"public_links":"disabled"}
+
+
+-v - verbose
+
+curl https://<domain>.qa-egnyte.com/public-api/v1/fs/Shared/testFOLDER -d '{"action": "add_folder"}' -u<username>:<password> -H 'Content-Type: application/json' -X POST -v
+
+REQUEST
+> POST /public-api/v1/fs/Shared/testFOLDER HTTP/1.1    -  <METHOD> /<endpoint> HTTP/<version>
+> Authorization: Basic aXN0ZXBhbmtvOmVnbnl0ZTR5b3U=    - ####################################
+> User-Agent: curl/7.37.1                                ####################################
+> Host: istepanko.qa-egnyte.com                          ##############HEADERS###############
+> Accept: */*                                            ####################################
+> Content-Type: application/json                         ####################################
+> Content-Length: 24                                     ####################################
+'{"action": "add_folder"}'
+
+echo admin:12345678 | base64
+
+
+RESPONSE
+< HTTP/1.1 201 Created                                - HTTP/<version> (<STATUS_CODE> <STATUS_WORD>) - status string
+< Date: Sat, 18 Jul 2015 20:03:56 GMT                 - Date
+* Server Apache-Coyote/1.1 is not blacklisted
+< Server: Apache-Coyote/1.1                           - Server type
+< Set-Cookie: EGNYTE-MARKETING-SESSION-COOKIE=1; path=/; domain=qa-egnyte.com
+< Set-Cookie: X-Egnyte-Subdomain=istepanko; path=/; domain=qa-egnyte.com; expires=Sun, 17-Jul-2016 13:49:38 GMT
+< Set-Cookie: egnyte-proxy=NOT_FOUND; path=/; domain=istepanko.qa-egnyte.com; expires=Sun, 19-Jul-2015 13:49:38 GMT
+< Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+< Pragma: no-cache
+< Expires: -1
+< X-Egnyte-Update: 149038
+< X-Robots-Tag: none
+< Content-Type: application/json;charset=UTF-8
+< Content-Length: 0
+< X-Content-Type-Options: nosniff
+< Set-Cookie: JSESSIONID=9FF72874E803356DECD7E912EAD3A475.172.27.202.12_4180; Path=/; Secure; HttpOnly
+
+curl https://istepanko.qa-egnyte.com/public-api/v1/fs/Shared/testFOLDER/test --upload-file '/tmp/test' -uistepanko:egnyte4you -X POST -v
+
+
+SUBPROCESS EXAMPLE
+
+service <service_name> start
+
+Output:
+Starting <service_name> process                                     [  OK  ]
+
+def service_action(service, command):
+        p = subprocess.Popen(['service', service, command], stdout=subprocess.PIPE)
+        (out, err) = p.communicate()
+        return out, err
+
+>out
+Starting <service_name> process                                    [  OK  ]
+assert 'OK' in out
+assert 'Starting' in out
+
+a = out[0:10]
+
+
+
+OS EXAMPLE
+
+os.system('rm -rf /tmp/test') - deletes directors
+
+os.system('cd /tmp; mkdir asd)
+os.system(<shell script>)
+
+RUN SH FILE
+
+os.system('./test.sh')

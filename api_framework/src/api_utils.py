@@ -91,6 +91,7 @@ class Calls:
         response.http_code = r.status_code
         response.body = r.json
         response.headers = r.headers
+        print('\n' + str(response.http_code))
         return response
 
     def delete_folder(self, folder_name, domain=None, username=None, password=None,
@@ -135,6 +136,7 @@ class Calls:
         response.http_code = r.status_code
         response.body = r.json
         response.headers = r.headers
+        print('\n' + str(response.http_code))
         return response
 
     # Defining static(nothing to do with parent class) method, which generates random
