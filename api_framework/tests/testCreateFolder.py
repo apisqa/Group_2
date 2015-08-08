@@ -1,4 +1,5 @@
 from api_utils import Calls
+from api_utils import Config
 from unittest import TestCase
 import httplib
 
@@ -9,6 +10,7 @@ class TestClass(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.calls = Calls()
+        cls.config = Config()
 
     def test_create_folder_positive(self):
         folder_name = self.calls.gen_random_name()
@@ -64,3 +66,12 @@ class TestClass(TestCase):
             resp = self.calls.delete_folder(folder_name + str(i))
             assert resp.http_code == httplib.OK
             assert resp.body == self.calls.no_json
+
+    def test_perms(self):
+        folder_name = self.calls.gen_random_name()
+        self.calls.create_folder(folder_name)
+        resp = self.calls.set_perms(folder_name, user=self.config.puser, permission='Full')
+        assert resp.http_code == httplib.OK
+        resp = self.calls.create_folder(folder_name, username=self.config.puser, test_path='%s/%s' %
+                                                                                           (self.config.test_path, folder_name))
+        assert resp.http_code == httplib.CREATED
