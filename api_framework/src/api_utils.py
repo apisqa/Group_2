@@ -42,7 +42,7 @@ class Calls:
         # Creating object of class Config()
         self.config = Config()
         # Creating variable with string to return it in case there is no json
-        self.no_json = 'noJson'
+        self.no_json = 'NoJSON'
 
     def create_folder(self, folder_name, domain=None, username=None, password=None,
                       content_type=None, accept=None, method=None, test_path=None):
@@ -201,8 +201,7 @@ class Calls:
         print('\n' + str(response.http_code))
         return response
 
-    def upload(self, filename, path=None, server=None, name=None,
-               content_type=None, method=None, username=None, password=None):
+    def upload(self, filename, path=None, server=None, name=None, method=None, username=None, password=None):
         if username is None:
             username = self.config.admin_login
         if password is None:
@@ -212,16 +211,10 @@ class Calls:
         if path is None:
             path = self.config.test_path
 
-        headers = dict()
-
-        if content_type is not None:
-            headers['Content-type'] = content_type
-
         url = server + '/public-api/v1/fs-content' + path + '/' + name
         local_file_path = '%s/%s' % (self.config.test_data, filename)
         r = requests.request(
             url=url,
-            headers=headers,
             data=open(local_file_path, 'rb'),
             method=method,
             auth=(username, password)
@@ -278,10 +271,13 @@ class Calls:
         if file_name is None:
             file_name = 'test_filename_%s.txt' % str(time.time()).replace('.', '')
         file_path = '%s/%s' % (self.config.test_data, file_name)
+        # Check if there is a directory we need, if not then - create
         if not os.path.exists(self.config.test_data):
                 cmd = 'mkdir %s' % self.config.test_data
                 os.system(cmd)
+        # Check if there is a file we need, if not then - generate
         if not os.path.isfile('%s/%s' % (self.config.test_data, file_name)):
+            # Linux command to generate file(ZAPOMNIT!!!!111')
             cmd = "dd if=/dev/urandom of='%s' bs=%d count=%d 2>/dev/null" % (file_path, block_size, num_blocks)
             os.system(cmd)
         return file_name
