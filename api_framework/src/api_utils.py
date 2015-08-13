@@ -282,3 +282,8 @@ class Calls:
             cmd = "dd if=/dev/urandom of='%s' bs=%d count=%d 2>/dev/null" % (file_path, block_size, num_blocks)
             os.system(cmd)
         return file_name
+
+    def delete_test_files(self):
+        if os.path.exists(self.config.test_data):
+                cmd = 'rm -rf %s' % self.config.test_data
+                os.system(cmd)
