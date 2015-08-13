@@ -198,7 +198,6 @@ class Calls:
         response.http_code = r.status_code
         response.body = r.json
         response.headers = r.headers
-        print('\n' + str(response.http_code))
         return response
 
     def upload(self, filename, path=None, server=None, name=None, method=None, username=None, password=None):

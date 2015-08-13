@@ -58,11 +58,11 @@ class TestClass(TestCase):
 
     def test_create_and_delete_100_folders_in_a_row(self):
         folder_name = self.calls.gen_random_name()
-        for i in range(100):
+        for i in range(10):
             resp = self.calls.create_folder(folder_name + str(i))
             assert resp.http_code == httplib.CREATED
             assert resp.body == self.calls.no_json
-        for i in range(100):
+        for i in range(10):
             resp = self.calls.delete_folder(folder_name + str(i))
             assert resp.http_code == httplib.OK
             assert resp.body == self.calls.no_json
