@@ -200,7 +200,7 @@ class Calls:
         response.headers = r.headers
         return response
 
-    def upload(self, filename, path=None, server=None, name=None, method=None, username=None, password=None):
+    def upload(self, filename, path=None, domain=None, method=None, username=None, password=None):
         if username is None:
             username = self.config.admin_login
         if password is None:
@@ -209,8 +209,10 @@ class Calls:
             method = 'POST'
         if path is None:
             path = self.config.test_path
+        if domain is None:
+            domain = self.config.domain
 
-        url = server + '/public-api/v1/fs-content' + path + '/' + name
+        url = domain + '/public-api/v1/fs-content' + path + '/' + filename
         local_file_path = '%s/%s' % (self.config.test_data, filename)
         r = requests.request(
             url=url,
