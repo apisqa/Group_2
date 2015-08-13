@@ -15,7 +15,7 @@ class TestClass(TestCase):
     def test_create_folder_positive(self):
         folder_name = self.calls.gen_random_name()
         resp = self.calls.create_folder(folder_name)
-        assert resp.http_code == httplib.CREATED
+        self.assertEqual(resp.http_code, httplib.CREATED)
         self.calls.delete_folder(folder_name)
 
     def test_delete_folder(self):
