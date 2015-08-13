@@ -270,21 +270,18 @@ class Calls:
     def gen_random_name():
         return 'dynamic_name_%s' % str(time.time()).replace('.', '')
 
-    def gen_file(self, file_name=None, block_size=None, num_blocks=None, text=None):
+    def gen_file(self, file_name=None, block_size=None, num_blocks=None):
         if block_size is None:
             block_size = 200
         if num_blocks is None:
             num_blocks = 1
         if file_name is None:
-            file_name = 'test_filename_' + str(random.randint(1, 10000000)) + '.txt'
+            file_name = 'test_filename_%s.txt' % str(time.time()).replace('.', '')
         file_path = '%s/%s' % (self.config.test_data, file_name)
         if not os.path.exists(self.config.test_data):
                 cmd = 'mkdir %s' % self.config.test_data
                 os.system(cmd)
-        if not os.path.isfile('%s/%s' % (self.config.test_data, file_name)) and text is None:
+        if not os.path.isfile('%s/%s' % (self.config.test_data, file_name)):
             cmd = "dd if=/dev/urandom of='%s' bs=%d count=%d 2>/dev/null" % (file_path, block_size, num_blocks)
-            os.system(cmd)
-        elif text is not None:
-            cmd = 'echo "%s" > %s' % (text, file_path)
             os.system(cmd)
         return file_name
