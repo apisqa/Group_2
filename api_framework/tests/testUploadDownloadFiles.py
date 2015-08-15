@@ -49,3 +49,34 @@ class TestClass(TestCase):
             assert resp.body['checksum'] == resp.headers['x-sha512-checksum']
             assert resp.body['group_id']
             assert resp.body['entry_id']
+
+    def test_no_user_set_perms(self):
+        folder_name = self.calls.gen_random_name()
+        resp = self.calls.create_folder(folder_name)
+        assert resp.http_code == httplib.CREATED
+        resp = self.calls.set_perms(folder_name, 'Full', 'asdasdasd')
+        assert resp.http_code == httplib.OK
+
+    def test_upload_file_with_duplicate_name_of_folder(self):
+        folder_name = self.calls.gen_random_name()
+        self.calls.create_folder(folder_name)
+        file1 = self.calls.gen_file(folder_name)
+        resp = self.calls.upload(file1)
+        assert resp.http_code == httplib.FORBIDDEN
+        assert resp.body['message'] == 'A folder with the same name already exists: %s%s' % (self.config.test_path,
+                                                                                             folder_name)
+
+    def test_download_file_positive(self):
+        folder_name = self.calls.gen_random_name()
+        self.calls.create_folder(folder_name)
+        file1 = self.calls.gen_file()
+        self.calls.upload(file1)
+        resp = self.calls.download(file1)
+        file2 = resp.body
+        assert self.calls.compare(file1, file2)
+
+    def test_download_non_existent_file(self):
+        file1 = self.calls.gen_file()
+        resp = self.calls.download(file1)
+        assert resp.http_code == httplib.NOT_FOUND
+        assert resp.body['message'] == 'File does not exist'

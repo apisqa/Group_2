@@ -6,6 +6,7 @@ import os
 import sys
 import random
 import inspect
+import filecmp
 
 
 class Config:
@@ -25,7 +26,7 @@ class Config:
         self.password = self.parser.get('Server', 'password')
         self.test_path = self.parser.get('Server', 'testpath')
         self.puser = self.parser.get('Server', 'puser')
-        self.test_data = './test_files'
+        self.test_files = './test_files'
 
 
 # Define class for sexy looking response object
@@ -213,7 +214,7 @@ class Calls:
             domain = self.config.domain
 
         url = domain + '/public-api/v1/fs-content' + path + '/' + filename
-        local_file_path = '%s/%s' % (self.config.test_data, filename)
+        local_file_path = '%s/%s' % (self.config.test_files, filename)
         r = requests.request(
             url=url,
             data=open(local_file_path, 'rb'),
@@ -236,6 +237,44 @@ class Calls:
         response = Response()
         response.http_code = r.status_code
         response.body = r.json
+        response.headers = r.headers
+        return response
+
+    def download(self, filename=None, path=None, domain=None, username=None, password=None):
+        if domain is None:
+            domain = self.config.domain
+        if username is None:
+            username = self.config.admin_login
+        if password is None:
+            password = self.config.password
+        if path is None:
+            path = self.config.test_path
+
+        url = domain + '/public-api/v1/fs-content' + path + filename
+
+        r = requests.get(
+            url=url,
+            stream=True,
+            auth=(username, password)
+        )
+
+        try:
+            body = json.loads(r.content)
+        except ValueError:
+            file1 = self.gen_random_name()
+            if not os.path.isdir(self.config.test_files):
+                os.mkdir(self.config.test_files)
+            with open(self.config.test_files + '/' + file1, 'wb') as f:
+                for chunk in r.iter_content(1024):
+                    if chunk:
+                        f.write(chunk)
+                        f.flush()
+            body = file1
+        r.json = body
+        self.nice_print_out(call_name='Download File', r=r, caller=inspect.stack()[1][3])
+        response = Response()
+        response.http_code = r.status_code
+        response.body = body
         response.headers = r.headers
         return response
 
@@ -262,7 +301,7 @@ class Calls:
     # Defining static(nothing to do with parent class) method, which generates random
     @staticmethod
     def gen_random_name():
-        return 'dynamic_name_%s' % str(time.time()).replace('.', '')
+        return 'dynamic_name_%s%s' % (str(random.randint(10000, 99999)), str(time.time()).replace('.', ''))
 
     def gen_file(self, file_name=None, block_size=None, num_blocks=None):
         if block_size is None:
@@ -271,19 +310,23 @@ class Calls:
             num_blocks = 1
         if file_name is None:
             file_name = 'test_filename_%s.txt' % str(time.time()).replace('.', '')
-        file_path = '%s/%s' % (self.config.test_data, file_name)
+        file_path = '%s/%s' % (self.config.test_files, file_name)
         # Check if there is a directory we need, if not then - create
-        if not os.path.exists(self.config.test_data):
-                cmd = 'mkdir %s' % self.config.test_data
+        if not os.path.exists(self.config.test_files):
+                cmd = 'mkdir %s' % self.config.test_files
                 os.system(cmd)
         # Check if there is a file we need, if not then - generate
-        if not os.path.isfile('%s/%s' % (self.config.test_data, file_name)):
+        if not os.path.isfile('%s/%s' % (self.config.test_files, file_name)):
             # Linux command to generate file(ZAPOMNIT!!!!111')
             cmd = "dd if=/dev/urandom of='%s' bs=%d count=%d 2>/dev/null" % (file_path, block_size, num_blocks)
             os.system(cmd)
         return file_name
 
     def delete_test_files(self):
-        if os.path.exists(self.config.test_data):
-                cmd = 'rm -rf %s' % self.config.test_data
+        if os.path.exists(self.config.test_files):
+                cmd = 'rm -rf %s' % self.config.test_files
                 os.system(cmd)
+
+    @staticmethod
+    def compare(file1, file2):
+        return filecmp.cmp(Config().test_files + '/' + file1, Config().test_files + '/' + file2)
