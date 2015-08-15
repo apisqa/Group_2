@@ -67,8 +67,6 @@ class TestClass(TestCase):
                                                                                              folder_name)
 
     def test_download_file_positive(self):
-        folder_name = self.calls.gen_random_name()
-        self.calls.create_folder(folder_name)
         file1 = self.calls.gen_file()
         self.calls.upload(file1)
         resp = self.calls.download(file1)
@@ -76,7 +74,26 @@ class TestClass(TestCase):
         assert self.calls.compare(file1, file2)
 
     def test_download_non_existent_file(self):
-        file1 = self.calls.gen_file()
+        file1 = self.calls.gen_random_name()
         resp = self.calls.download(file1)
         assert resp.http_code == httplib.NOT_FOUND
         assert resp.body['message'] == 'File does not exist'
+
+    def test_download_file_enough_perms(self):
+        perms = ['Viewer', 'Editor', 'Full', 'Owner']
+        file1 = self.calls.gen_file()
+        self.calls.upload(file1)
+        for perm in perms:
+            self.calls.set_perms('', perm, self.config.puser)
+            resp = self.calls.download(file1, username=self.config.puser)
+            assert resp.http_code == httplib.OK
+
+    def test_download_file_not_enough_perms(self):
+        perms = ['None']
+        file1 = self.calls.gen_file()
+        self.calls.upload(file1)
+        for perm in perms:
+            self.calls.set_perms('', perm, self.config.puser)
+            resp = self.calls.download(file1, username=self.config.puser)
+            assert resp.http_code == httplib.FORBIDDEN
+            assert resp.body['message'] == 'User does not have permission to view this resource'
